@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "arabgodx",
+  "risk": "3",
+  "title": "Potential Vulnerabilities in Nested Contract Operations and Constructor Argument Validation",
+  "issueId": 5,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/5"
+}
