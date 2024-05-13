@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "arabgodx",
+  "risk": "3",
+  "title": "Unsafe Usage of SafeERC20 Library: Missing Argument in safeIncreaseAllowance",
+  "issueId": 22,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/22"
+}
