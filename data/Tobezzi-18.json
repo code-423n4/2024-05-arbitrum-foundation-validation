@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Tobezzi",
+  "risk": "2",
+  "title": "`EdgeChallengeManager::createLayerZeroEdge(CreateEdgeArgs)` is not initiated",
+  "issueId": 18,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/18"
+}
