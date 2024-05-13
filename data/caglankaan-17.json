@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "caglankaan",
+  "risk": "2",
+  "title": "Contracts are vulnerable to fee-on-transfer accounting-related issues",
+  "issueId": 17,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/17"
+}
