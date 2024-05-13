@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Tigerfrake",
+  "risk": "2",
+  "title": "Potential Signature replay in `StateHashPreImageLookup` contract ",
+  "issueId": 12,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/12"
+}
