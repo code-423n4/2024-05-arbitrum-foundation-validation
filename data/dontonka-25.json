@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "dontonka",
+  "risk": "3",
+  "title": "Upgrades to EdgeChallengeManager changing staking requirement can cause `protocol insolvency`",
+  "issueId": 25,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/25"
+}
