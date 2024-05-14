@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "2",
+  "title": "[M-2] `SequencerInbox::initialize`- Initialize function can be called multiple times by anyone, allowing attackers to reset the contract with their own parameters over and over again.",
+  "issueId": 29,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/29"
+}
