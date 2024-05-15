@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "arabgodx",
+  "risk": "3",
+  "title": "Inconsistent Instantiation and initialization of using SafeERC20 for IERC20;, Inconsistent Allocating Correct Argument Usage in safeIncreaseAllowance Function Call",
+  "issueId": 36,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/36"
+}
