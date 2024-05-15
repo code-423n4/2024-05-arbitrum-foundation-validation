@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "3",
+  "title": "[H-3] `RollupCreator::createRollup` - Absence of Policy Against Delegate Calls to Untrusted Contracts (Lack of Input Validation) can lead to Unauthorized Access and State Manipulation",
+  "issueId": 46,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/46"
+}
