@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "arabgodx",
+  "risk": "3",
+  "title": "Race Condition in SequencerInbox's _setBufferConfig Function",
+  "issueId": 41,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/41"
+}
