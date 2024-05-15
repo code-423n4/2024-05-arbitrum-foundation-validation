@@ -83,9 +83,17 @@ Example
 `bytes32 public immutable GOVERNOR_ROLE = keccak256("GOVERNOR_ROLE");`
 Background Information
 
+===========================================================================
 
+## Optimizing Gas Usage in Smart Contract Hashing Function
 
+Switching from `abi.encode` to `abi.encodePacked` for the hashing process could significantly reduce the gas cost associated with the operation. By eliminating unnecessary padding, `abi.encodePacked` produces a more compact binary representation of the data, thereby reducing the amount of data that needs to be processed and stored.
 
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/AssertionState.sol#L23
+
+-- return keccak256(abi.encode(state));
+
+++ return keccak256(abi.encodePacked(state));
 
 
 
