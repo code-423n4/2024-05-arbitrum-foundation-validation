@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "wisdomn_",
+  "risk": "2",
+  "title": "Users whose stakes were used to create the pool move can withdraw the excess stakes of other users by frontrunning them.",
+  "issueId": 34,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/34"
+}
