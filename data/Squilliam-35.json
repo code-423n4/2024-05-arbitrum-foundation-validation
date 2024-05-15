@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "2",
+  "title": "[M-5] `RollupAdminLogic::setOwner` - Lack of Two-Step Transfer Process for Critical Privileges (Missing Confirmation Step + Potential Unauthorized Ownership Changes)",
+  "issueId": 35,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/35"
+}
