@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "2",
+  "title": "[M-8] `RollupCreator::createRollup` - Lack of Address Existence Verification (Unchecked External Calls) can lead to Unexpected Behavior and Exploits",
+  "issueId": 47,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/47"
+}
