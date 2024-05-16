@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "3",
+  "title": "[H-4] `RollupUserLogic::newStakeOnNewAssertion` - Inconsistent Usage of Check-Effect-Interaction Pattern (Reentrancy Vulnerability) can lead to Fund Manipulation and Unauthorized Actions",
+  "issueId": 48,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/48"
+}
