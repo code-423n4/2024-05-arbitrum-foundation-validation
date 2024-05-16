@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "arabgodx",
+  "risk": "3",
+  "title": "Unauthorized Withdrawal Vulnerability in AbsBoldStakingPool Contract AbsBoldStakingPool: Unauthorized Withdrawals from Staking Pool",
+  "issueId": 66,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/66"
+}
