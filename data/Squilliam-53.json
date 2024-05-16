@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "2",
+  "title": "[M-10] `RollupCreator::createRollup` - Lack of Validation on Input Data Size (Unintended Memory Access) can lead to Disruption of Protocol Functionality",
+  "issueId": 53,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/53"
+}
