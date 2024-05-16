@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "2",
+  "title": "[M-13] `MerkleTreeLib::root` Lack of Overflow Checks can lead to Overflows and unexpected behavior",
+  "issueId": 62,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/62"
+}
