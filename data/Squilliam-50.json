@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "3",
+  "title": "[H-5] `MerkleTreeLib::verifyInclusionProof` - Accepting Zero Hash as Root Hash (Improper Validation) can lead to Proof Fabrication by Attackers ",
+  "issueId": 50,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/50"
+}
