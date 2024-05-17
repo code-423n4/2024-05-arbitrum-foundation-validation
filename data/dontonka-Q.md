@@ -49,7 +49,7 @@ abstract contract AbsBoldStakingPool is IAbsBoldStakingPool {
 
 
 ### PoC
-Add the following test `testDeployEmptyStakeToken` in `EdgeChallengeManager.t.sol` and run the test. This demostrate that it's possible to create an EdgeStakingPool based on a ECM that has an empty stakeToken and such pool is in a `unusable state and can't be used`.
+Add the following test `testDeployEmptyStakeToken` in `EdgeChallengeManager.t.sol` and run the test. This demostrate that it's possible to create an EdgeStakingPool based on a ECM that has an empty stakeToken and such pool `can't be used`.
 
 ```diff
 index 12ba7f0..74011f1 100644
