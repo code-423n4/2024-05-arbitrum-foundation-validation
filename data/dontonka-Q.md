@@ -1,4 +1,5 @@
 ### **[[ Low - 1 ]]** 
+-----
 In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. That would be also more consistent with `AssertionStakingPoolCreator.sol`.
 
 ```diff
@@ -20,3 +21,86 @@ contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
     }
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
+
+
+### **[[ Low - 2 ]]** 
+-----
+This has been flagged as NC by [4naly3er](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/4naly3er-report.md#nc-1-missing-checks-for-address0-when-assigning-values-to-address-state-variables) on the first instance, but I wanted to still report it as found a more severe impact(Low) for the lack of validation.
+
+Essentially, since `EdgeChallengeManager` is allowed to be initialized with an `empty stakeToken`, that allow the possibility for users to create an `EdgeStakingPool` that can't do anything, so gas wasted creating such pool, which seems to warrant `Low severity`. Granted someone could argue that user should not try todo such action if the stakeToken is empty in ECM, but if the stakeAmounts are valid, that might be confusing and create some doubts about the validity of such operation. Finally, even if the ECM is updated afterward with a valid stakeToken, that pool would still remain unusable. Since `AssertionStakingPool` enforce in the Rollup contract that stakeToken can't be empty, that validation would not cause any negative impact.
+
+```diff
+abstract contract AbsBoldStakingPool is IAbsBoldStakingPool {
+    using SafeERC20 for IERC20;
+
+    /// @inheritdoc IAbsBoldStakingPool
+    address public immutable stakeToken;
+    /// @inheritdoc IAbsBoldStakingPool
+    mapping(address => uint256) public depositBalance;
+
+    constructor(address _stakeToken) {
++       if (_stakeToken == address(0)) {
++	    revert EmptyStakeToken();
++	}
++		
+        stakeToken = _stakeToken;
+    }
+```
+
+
+### PoC
+Add the following test `testDeployEmptyStakeToken` in `EdgeChallengeManager.t.sol` and run the test. This demostrate that it's possible to create an EdgeStakingPool based on a ECM that has an empty stakeToken and such pool is in a `unusable state and can't be used`.
+
+```diff
+index 12ba7f0..74011f1 100644
+--- a/test/challengeV2/EdgeChallengeManager.t.sol
++++ b/test/challengeV2/EdgeChallengeManager.t.sol
+@@ -12,6 +12,7 @@ import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.so
+ import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
+ import "../ERC20Mock.sol";
+ import "./StateTools.sol";
++import "../../src/assertionStakingPool/EdgeStakingPoolCreator.sol";
+
+ contract MockOneStepProofEntry is IOneStepProofEntry {
+     function getStartMachineHash(bytes32 globalStateHash, bytes32 wasmModuleRoot) external pure returns (bytes32) {
+@@ -121,6 +122,40 @@ contract EdgeChallengeManagerTest is Test {
+         return (assertionChain, challengeManager, genesisAssertionHash);
+     }
+
++    function testDeployEmptyStakeToken() public {
++        bytes32 edgeId = hex"00010001000100010001000100010001";
++
++        // 1) Deploy EdgeChallengeManager with a address(0) token
++        MockAssertionChain assertionChain = new MockAssertionChain();
++        assertionChain.setValidatorWhitelistDisabled(true);
++        EdgeChallengeManager challengeManagerTemplate = new EdgeChallengeManager();
++        EdgeChallengeManager challengeManager = EdgeChallengeManager(
++            address(new TransparentUpgradeableProxy(address(challengeManagerTemplate), address(new ProxyAdmin()), ""))
++        );
++        uint256[] memory stakeAmounts = miniStakeAmounts();
++
++        challengeManager.initialize(
++            assertionChain,
++            challengePeriodBlock,
++            new MockOneStepProofEntry(),
++            2 ** 5,
++            2 ** 5,
++            2 ** 5,
++            IERC20(address(0)), // <--------------- No staking token
++            excessStakeReceiver,
++            NUM_BIGSTEP_LEVEL,
++            stakeAmounts
++        );
++
++        // 2) Create the EdgeStakingPool
++        EdgeStakingPoolCreator stakingPoolCreator = new EdgeStakingPoolCreator();
++        IEdgeStakingPool stakingPool = stakingPoolCreator.createPool(address(challengeManager), edgeId);
++
++        // 3) Try to deposit into the pool
++        vm.expectRevert("Address: call to non-contract");
++        stakingPool.depositIntoPool(1);
++    }
++
+     function testDeployInit() public {
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/AbsBoldStakingPool.sol#L24-L26
