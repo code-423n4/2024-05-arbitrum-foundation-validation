@@ -91,9 +91,15 @@ Switching from `abi.encode` to `abi.encodePacked` for the hashing process could 
 
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/AssertionState.sol#L23
 
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L32
+
 -- return keccak256(abi.encode(state));
 
 ++ return keccak256(abi.encodePacked(state));
 
+and
+
+-- abi.encode(challengeManager, edgeId)
+++ abi.encodePacked(challengeManager, edgeId)
 
 
