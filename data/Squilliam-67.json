@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Squilliam",
+  "risk": "2",
+  "title": "[M-16] `AssertionStakingPool::withdrawStakeBackIntoPool` - Ignores the return value of the `withdrawStakerFunds()` function call and can lead to Contract Inconsistencies",
+  "issueId": 67,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/67"
+}
