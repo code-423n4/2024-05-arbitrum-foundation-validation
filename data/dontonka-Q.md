@@ -1,30 +1,5 @@
 ### **[[ Low - 1 ]]** 
 -----
-In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. That would be also more consistent with `AssertionStakingPoolCreator.sol`.
-
-```diff
-    /// @notice Event emitted when a new staking pool is created
--   event NewEdgeStakingPoolCreated(address indexed challengeManager, bytes32 indexed edgeId);
-+   event NewEdgeStakingPoolCreated(address indexed challengeManager, bytes32 indexed edgeId, address edgePool);
-
-
-contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
-    /// @inheritdoc IEdgeStakingPoolCreator
-    function createPool(
-        address challengeManager,
-        bytes32 edgeId
-    ) external returns (IEdgeStakingPool) {
-        EdgeStakingPool pool = new EdgeStakingPool{salt: 0}(challengeManager, edgeId);
--       emit NewEdgeStakingPoolCreated(challengeManager, edgeId);
-+       emit NewEdgeStakingPoolCreated(challengeManager, edgeId, address(pool)); 
-        return pool;
-    }
-```
-https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
-
-
-### **[[ Low - 2 ]]** 
------
 This has been flagged as NC by [4naly3er](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/4naly3er-report.md#nc-1-missing-checks-for-address0-when-assigning-values-to-address-state-variables) on the first instance, but I wanted to still report it as found a more severe impact(Low) for the lack of validation.
 
 Essentially, since `EdgeChallengeManager` is allowed to be initialized with an `empty stakeToken`, that allow the possibility for users to create an `EdgeStakingPool` that can't do anything, so gas wasted creating such pool, which seems to warrant `Low severity`. Granted someone could argue that user should not try todo such action if the stakeToken is empty in ECM, but if the stakeAmounts are valid, that might be confusing and create some doubts about the validity of such operation. Finally, even if the ECM is updated afterward with a valid stakeToken, that pool would still remain unusable. Since `AssertionStakingPool` enforce in the Rollup contract that stakeToken can't be empty, that validation would not cause any negative impact.
@@ -104,3 +79,27 @@ index 12ba7f0..74011f1 100644
      function testDeployInit() public {
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/AbsBoldStakingPool.sol#L24-L26
+
+### **[[ Low - 2 ]]** 
+-----
+In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. Granted that `getPool` is actually used for that too, but that would be more consistent with `AssertionStakingPoolCreator.sol`. If this was totally intentional, then please ignore.
+
+```diff
+    /// @notice Event emitted when a new staking pool is created
+-   event NewEdgeStakingPoolCreated(address indexed challengeManager, bytes32 indexed edgeId);
++   event NewEdgeStakingPoolCreated(address indexed challengeManager, bytes32 indexed edgeId, address edgePool);
+
+
+contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
+    /// @inheritdoc IEdgeStakingPoolCreator
+    function createPool(
+        address challengeManager,
+        bytes32 edgeId
+    ) external returns (IEdgeStakingPool) {
+        EdgeStakingPool pool = new EdgeStakingPool{salt: 0}(challengeManager, edgeId);
+-       emit NewEdgeStakingPoolCreated(challengeManager, edgeId);
++       emit NewEdgeStakingPoolCreated(challengeManager, edgeId, address(pool)); 
+        return pool;
+    }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
