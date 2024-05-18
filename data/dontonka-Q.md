@@ -103,3 +103,31 @@ contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
     }
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
+
+
+### **[[ NC - 1 ]]** 
+-----
+Even if out-of-scope, I've fixed the following TODO in `Rollup.t.sol::SetUp` which I still want to submit even if probably not considered for rewards.
+
+```diff
+index 3d7d9e6..755aeea 100644
+--- a/test/Rollup.t.sol
++++ b/test/Rollup.t.sol
+@@ -200,12 +200,9 @@ contract RollupTest is Test {
+         });
+
+         address rollupAddr = rollupCreator.createRollup(param);
+-        // TODO: fix this
+-        // bytes32 rollupSalt = keccak256(abi.encode(config, address(0), new address[](0), false, MAX_DATA_SIZE));
+-        // address expectedRollupAddress = Create2Upgradeable.computeAddress(
+-        //     rollupSalt, keccak256(type(RollupProxy).creationCode), address(rollupCreator)
+-        // );
+-        // assertEq(expectedRollupAddress, rollupAddr, "Unexpected rollup address");
++        bytes32 rollupSalt = keccak256(abi.encode(param));
++        address expectedRollupAddress = Create2Upgradeable.computeAddress(rollupSalt, keccak256(type(RollupProxy).creationCode), address(rollupCreator));
++        assertEq(expectedRollupAddress, rollupAddr, "Unexpected rollup address");
+
+         userRollup = RollupUserLogic(address(rollupAddr));
+         adminRollup = RollupAdminLogic(address(rollupAddr));
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/test/Rollup.t.sol#L203-L208
