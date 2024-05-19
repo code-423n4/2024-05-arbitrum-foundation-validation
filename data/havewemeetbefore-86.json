@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "havewemeetbefore",
+  "risk": "3",
+  "title": "reentrancy attack during withdrawFromPool function in AbsBoldStakingPool contract",
+  "issueId": 86,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/86"
+}
