@@ -107,6 +107,31 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertio
 
 ### **[[ NC - 1 ]]** 
 -----
+The first condition in `SequencerInbox::postUpgradeInit` is redundant as already checked in [_setBufferConfig](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L848).
+
+```diff
+    function postUpgradeInit(BufferConfig memory bufferConfig_)
+        external
+        onlyDelegated
+        onlyProxyOwner
+    {
+-       if (!isDelayBufferable) revert NotDelayBufferable();
+
+        // Assuming we would not upgrade from a version that does not have the buffer initialized
+        // If that is the case, postUpgradeInit do not need to be called
+        if (buffer.bufferBlocks != 0) {
+            revert AlreadyInit();
+        }
+
+        _setBufferConfig(bufferConfig_);
+    }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L166
+
+
+
+### **[[ NC - 2 ]]** 
+-----
 Even if out-of-scope, I've fixed the following TODO in `Rollup.t.sol::SetUp` which I still want to submit even if probably not considered for rewards.
 
 ```diff
