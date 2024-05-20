@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Satyam_Sharma",
+  "risk": "3",
+  "title": "Downcasting nextInboxPosition variable from uint256 to unit256 will truncate all the message hash above 2^64 that cause an discrepancy among the new message hash.",
+  "issueId": 90,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/90"
+}
