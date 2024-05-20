@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "0xrex",
+  "risk": "2",
+  "title": "Staking token transfer to the `loserStakeEscrow` after assertions will fail when the RollupUserLogic contract holds less or no stake tokens at all",
+  "issueId": 94,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/94"
+}
