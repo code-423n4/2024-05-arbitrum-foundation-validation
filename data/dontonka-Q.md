@@ -105,6 +105,23 @@ contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
 
 
+### **[[ Low - 3 ]]** 
+-----
+In `RollupAdminLogic.sol` seems like `_disableInitializers` should be added in the constructor to prevent the contract to be uninitialized as otherwise this open the door for an attacker to take it over.
+
+```diff
+contract RollupAdminLogic is RollupCore, IRollupAdmin, DoubleLogicUUPSUpgradeable {
+    using AssertionStateLib for AssertionState;
+
++    constructor() {
++       _disableInitializers();
++    }
+
+    ...
+}
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupAdminLogic.sol#L15
+
 ### **[[ NC - 1 ]]** 
 -----
 The first condition in `SequencerInbox::postUpgradeInit` is redundant as already checked in [_setBufferConfig](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L848).
