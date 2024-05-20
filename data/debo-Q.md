@@ -134,3 +134,51 @@ Please adopt fixed and newish pragma version.
 # Line 5> 
 # bug flaw> pragma solidity ^0.8.0;
 # bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/IRollupAdmin.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/IRollupCore.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/IRollupLogic.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/RollupAdminLogic.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/RollupCore.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/RollupCreator.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/RollupProxy.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
+``` ```
+``` ```
+# rollup/RollupUserLogic.sol
+# Line 5> 
+# bug flaw> pragma solidity ^0.8.0;
+# bug fix> pragma solidity 0.8.4;
