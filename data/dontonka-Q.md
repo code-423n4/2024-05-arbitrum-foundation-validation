@@ -224,6 +224,31 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/S
 
 ### **[[ NC - 2 ]]** 
 -----
+I think it would be easier to understand the code if you would do the following instead, which should be equivalent.
+```diff
+    /**
+     * @notice Verify that the given staker is not active
+     * @param stakerAddress Address to check
+     */
+    function requireInactiveStaker(address stakerAddress) internal view {
+        require(isStaked(stakerAddress), "NOT_STAKED");
+        // A staker is inactive if
+        // a) their last staked assertion is the latest confirmed assertion
+        // b) their last staked assertion have a child
+        bytes32 lastestAssertion = latestStakedAssertion(stakerAddress);
+        bool isLatestConfirmed = lastestAssertion == latestConfirmed();
+-       bool haveChild = getAssertionStorage(lastestAssertion).firstChildBlock > 0;
++       bool isConfirmed = getAssertionStorage(lastestAssertion).status == AssertionStatus.Confirmed;
+-       require(isLatestConfirmed || haveChild, "STAKE_ACTIVE");
++       require(isLatestConfirmed || isConfirmed, "STAKE_ACTIVE");
+
+    }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupCore.sol#L565-L574
+
+
+### **[[ NC - 3 ]]** 
+-----
 Typo in a comment, "to keep" duplicated.
 ```diff
         // Fetch a storage reference to prevAssertion since we copied our other one into memory
