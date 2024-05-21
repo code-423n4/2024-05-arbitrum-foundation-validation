@@ -76,18 +76,6 @@ Please adopt fixed and newish pragma version.
 # bug fix> pragma solidity 0.8.4;
 ``` ```
 ``` ```
-# DelayBufferTypes.sol
-# Line 7> 
-# bug flaw> pragma solidity >=0.6.9 <0.9.0;
-# bug fix> pragma solidity 0.8.11;
-``` ```
-``` ```
-# ISequencerInbox.sol
-# Line 6> 
-# bug flaw> pragma solidity >=0.6.9 <0.9.0;
-# bug fix> pragma solidity 0.8.11;
-``` ```
-``` ```
 # SequencerInbox.sol
 # Line 5> 
 # bug flaw> pragma solidity >=0.6.9 <0.9.0;
