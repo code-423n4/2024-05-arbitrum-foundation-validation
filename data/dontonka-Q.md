@@ -223,9 +223,9 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/S
 
 
 
-### **[[ NC - 2 ]]** 
+### **[[ NC - Out-Of-Scope ]]** 
 -----
-Even if out-of-scope, I've fixed the following TODO in `Rollup.t.sol::SetUp` which I still want to submit even if probably not considered for rewards.
+Even if out-of-scope, I've fixed the following TODO in `Rollup.t.sol::SetUp` which I still want to submit.
 
 ```diff
 index 3d7d9e6..755aeea 100644
