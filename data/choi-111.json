@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "choi",
+  "risk": "2",
+  "title": "Inadequate Error Handling in EdgeChallengeManager Contract",
+  "issueId": 111,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/111"
+}
