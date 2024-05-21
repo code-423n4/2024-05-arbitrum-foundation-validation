@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "fyamf",
+  "risk": "3",
+  "title": "Consuming staking pool fund maliciously if `assertionHash` in assertion staking pool is zero",
+  "issueId": 99,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/99"
+}
