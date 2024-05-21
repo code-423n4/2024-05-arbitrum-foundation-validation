@@ -222,6 +222,18 @@ The first condition in `SequencerInbox::postUpgradeInit` is redundant as already
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L166
 
 
+### **[[ NC - 2 ]]** 
+-----
+Typo in a comment, "to keep" duplicated.
+```diff
+        // Fetch a storage reference to prevAssertion since we copied our other one into memory
+-       // and we don't have enough stack available to keep to keep the previous storage reference around
++       // and we don't have enough stack available to keep the previous storage reference around
+
+        prevAssertion.childCreated();
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupCore.sol#L500
+
 
 ### **[[ NC - Out-Of-Scope ]]** 
 -----
