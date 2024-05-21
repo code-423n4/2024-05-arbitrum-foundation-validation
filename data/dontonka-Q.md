@@ -82,6 +82,24 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertio
 
 ### **[[ Low - 2 ]]** 
 -----
+In `RollupAdminLogic.sol` seems like `_disableInitializers` should be added in the constructor to prevent the contract to be uninitialized as otherwise this open the door for an attacker to take it over.
+
+```diff
+contract RollupAdminLogic is RollupCore, IRollupAdmin, DoubleLogicUUPSUpgradeable {
+    using AssertionStateLib for AssertionState;
+
++    constructor() {
++       _disableInitializers();
++    }
+
+    ...
+}
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupAdminLogic.sol#L15
+
+
+### **[[ Low - 3 ]]** 
+-----
 In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. Granted that `getPool` is actually used for that too, but that would be more consistent with `AssertionStakingPoolCreator.sol`. If this was totally intentional, then please ignore.
 
 ```diff
@@ -105,22 +123,6 @@ contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
 
 
-### **[[ Low - 3 ]]** 
------
-In `RollupAdminLogic.sol` seems like `_disableInitializers` should be added in the constructor to prevent the contract to be uninitialized as otherwise this open the door for an attacker to take it over.
-
-```diff
-contract RollupAdminLogic is RollupCore, IRollupAdmin, DoubleLogicUUPSUpgradeable {
-    using AssertionStateLib for AssertionState;
-
-+    constructor() {
-+       _disableInitializers();
-+    }
-
-    ...
-}
-```
-https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupAdminLogic.sol#L15
 
 ### **[[ NC - 1 ]]** 
 -----
