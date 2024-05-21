@@ -147,7 +147,8 @@ This is showcasing `Impact 1`. We have 3 actors in play: Admin, Alice and Bob.
 
 
 ## Recommended Mitigation Steps
-If an upgrade is required for the `stakeToken and/or stakeAmounts`, normal upgrade `can't` be used, and only a complete upgrade which would also upgrade the proxy (so not re-use the storage) and officialize it with `RollupAdminLogic::setChallengeManager` afterward. That should be `documented very clearly and explicitly` as the current setup as the potential to break things down the road.
+If an upgrade is required for the `stakeToken and/or stakeAmounts`, normal upgrade `can't` be used, and only a complete upgrade which would also upgrade the proxy (so not re-use the storage) and officialize it with `RollupAdminLogic::setChallengeManager` afterward. That should be `documented very clearly and explicitly` as the current setup as the potential to break things down the road. The proper fix would be to make those state variables `immutable`, but since the contract is upgradable and those value are not set at construction time, that is not possible.
+
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/challengeV2/EdgeChallengeManager.sol#L429
 
 
