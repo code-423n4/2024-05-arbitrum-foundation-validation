@@ -79,31 +79,31 @@ Please adopt fixed and newish pragma version.
 # DelayBufferTypes.sol
 # Line 7> 
 # bug flaw> pragma solidity >=0.6.9 <0.9.0;
-# bug fix> pragma solidity 0.9.0;
+# bug fix> pragma solidity 0.8.11;
 ``` ```
 ``` ```
 # ISequencerInbox.sol
 # Line 6> 
 # bug flaw> pragma solidity >=0.6.9 <0.9.0;
-# bug fix> pragma solidity 0.9.0;
+# bug fix> pragma solidity 0.8.11;
 ``` ```
 ``` ```
 # SequencerInbox.sol
 # Line 5> 
 # bug flaw> pragma solidity >=0.6.9 <0.9.0;
-# bug fix> pragma solidity 0.9.0;
+# bug fix> pragma solidity 0.8.11;
 ``` ```
 ``` ```
 # EdgeChallengeManager.sol
 # Line 5> 
 # bug flaw> pragma solidity ^0.8.17;
-# bug fix> pragma solidity 0.9.0;
+# bug fix> pragma solidity 0.8.26;
 ``` ```
 ``` ```
 # IAssertionChain.sol
 # Line 5> 
 # bug flaw> pragma solidity ^0.8.17;
-# bug fix> pragma solidity 0.9.0;
+# bug fix> pragma solidity 0.8.26;
 ``` ```
 ``` ```
 # rollup/Assertion.sol
