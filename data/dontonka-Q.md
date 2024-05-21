@@ -1,4 +1,4 @@
-### **[[ Low - 1 ]]** 
+### **[ Low - 1 ]** 
 -----
 This has been flagged as NC by [4naly3er](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/4naly3er-report.md#nc-1-missing-checks-for-address0-when-assigning-values-to-address-state-variables) on the first instance, but I wanted to still report it as found a more severe impact(Low) for the lack of validation.
 
@@ -80,7 +80,7 @@ index 12ba7f0..74011f1 100644
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/AbsBoldStakingPool.sol#L24-L26
 
-### **[[ Low - 2 ]]** 
+### **[ Low - 2 ]** 
 This is related to `TOB-ARBCH-31` from the TrailOfBits audit. The fact that `EdgeChallengeManager.sol` is upgradeble, if an Admin would be to upgrade the contract and by mistakes update `stakeToken` and/or `stakeAmounts`, that would result in `catastrophic consequences`, which is why I still want to report this as `Low` by `explaining further` what would go wrong in such case.
 
 ## Impacts (stakeAmounts)
@@ -154,7 +154,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/challeng
 
 
 
-### **[[ Low - 3 ]]** 
+### **[ Low - 3 ]** 
 -----
 In `RollupAdminLogic.sol` seems like `_disableInitializers` should be added in the constructor to prevent the contract to be uninitialized as otherwise this open the door for an attacker to take it over.
 
@@ -172,7 +172,7 @@ contract RollupAdminLogic is RollupCore, IRollupAdmin, DoubleLogicUUPSUpgradeabl
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupAdminLogic.sol#L15
 
 
-### **[[ Low - 4 ]]** 
+### **[ Low - 4 ]** 
 -----
 In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. Granted that `getPool` is actually used for that too, but that would be more consistent with `AssertionStakingPoolCreator.sol`. If this was totally intentional, then please ignore.
 
@@ -198,7 +198,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertio
 
 
 
-### **[[ NC - 1 ]]** 
+### **[ NC - 1 ]** 
 -----
 The first condition in `SequencerInbox::postUpgradeInit` is redundant as already checked in [_setBufferConfig](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L848).
 
@@ -222,9 +222,9 @@ The first condition in `SequencerInbox::postUpgradeInit` is redundant as already
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L166
 
 
-### **[[ NC - 2 ]]** 
+### **[ NC - 2 ]** 
 -----
-I think it would be easier to understand the code if you would do the following instead, which should be equivalent.
+I think it would be easier to understand the code if you would do the following instead, which should be equivalent. At least `testRevertReduceDepositActive` and  `testRevertWithdrawActiveStake` are still happy with this change.
 ```diff
     /**
      * @notice Verify that the given staker is not active
@@ -247,7 +247,7 @@ I think it would be easier to understand the code if you would do the following 
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupCore.sol#L565-L574
 
 
-### **[[ NC - 3 ]]** 
+### **[ NC - 3 ]** 
 -----
 Typo in a comment, "to keep" duplicated.
 ```diff
