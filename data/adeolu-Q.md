@@ -1,43 +1,7 @@
-## [G-01] - can avoid doing external call to rollup twice
-https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/bridge/SequencerInbox.sol#L103C1-L106C6
-```
-    modifier onlyRollupOwner() {
-        if (msg.sender != rollup.owner()) revert NotOwner(msg.sender, rollup.owner());
-        _;
-    }
-```
-
-https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/bridge/SequencerInbox.sol#L208C1-L210C67
-```
-    function updateRollupAddress() external {
-        if (msg.sender != IOwnable(rollup).owner())
-            revert NotOwner(msg.sender, IOwnable(rollup).owner());
-```
-external calls to other contracts cost gas additional gas, doing it twice is rather unneccessary as the data being read can be saved to a local variable and then  reused in memory.
-
-### Recommened Mitigation
-save `rollup.owner()` to local variable and  use the local variable in function logic. 
-
-
-```
-    modifier onlyRollupOwner() {
-        address rollUpOwner = rollup.owner();
-        if (msg.sender != rollUpOwner) revert NotOwner(msg.sender, rollUpOwner); //@audit can avoid two external calls here to rollup here too
-        _;
-    }
-```
-
-```
-    function updateRollupAddress() external {
-        address owner = rollUp.owner();
-        if (msg.sender != owner)
-            revert NotOwner(msg.sender, owner); 
-```
-
-
+# LOW SEVERITY ISSUES 
 ## [L-01] - user's legit Pool creation tx can be frontran and caused to fail
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/AssertionStakingPoolCreator.sol#L19
-```
+```solidity
     function createPool(
         address _rollup,
         bytes32 _assertionHash
@@ -45,7 +9,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
         AssertionStakingPool assertionPool = new AssertionStakingPool{salt: 0}(_rollup, _assertionHash);
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L19
-```
+```solidity
     function createPool(
         address challengeManager,
         bytes32 edgeId
@@ -60,3 +24,41 @@ This will cause the user's tx to fail if attackers tx is included in the block b
 
 ### Recommended Mitigation
 to mitigate this the salt value can be made to be more unique to each call. For example instead of it being 0 it can be the msg.sender value. 
+
+# GAS OPTIMISATIONS 
+## [G-01] - can avoid doing external call to rollup twice
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/bridge/SequencerInbox.sol#L103C1-L106C6
+```solidity
+    modifier onlyRollupOwner() {
+        if (msg.sender != rollup.owner()) revert NotOwner(msg.sender, rollup.owner());
+        _;
+    }
+```
+
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/bridge/SequencerInbox.sol#L208C1-L210C67
+```solidity
+    function updateRollupAddress() external {
+        if (msg.sender != IOwnable(rollup).owner())
+            revert NotOwner(msg.sender, IOwnable(rollup).owner());
+```
+external calls to other contracts cost gas additional gas, doing it twice is rather unneccessary as the data being read can be saved to a local variable and then  reused in memory.
+
+### Recommened Mitigation
+save `rollup.owner()` to local variable and  use the local variable in function logic. 
+
+
+```solidity
+    modifier onlyRollupOwner() {
+        address rollUpOwner = rollup.owner();
+        if (msg.sender != rollUpOwner) revert NotOwner(msg.sender, rollUpOwner); //@audit can avoid two external calls here to rollup here too
+        _;
+    }
+```
+
+```solidity
+    function updateRollupAddress() external {
+        address owner = rollUp.owner();
+        if (msg.sender != owner)
+            revert NotOwner(msg.sender, owner); 
+```
+
