@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "pwning_dev",
+  "risk": "2",
+  "title": "refundStake involve transferring tokens (st.safeTransfer) to edge.staker ",
+  "issueId": 114,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/114"
+}
