@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "ladboy233",
+  "risk": "2",
+  "title": "Upgrade action will fail because of the challange manager initialize interface mismatch",
+  "issueId": 136,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/136"
+}
