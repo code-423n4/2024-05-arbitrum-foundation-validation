@@ -80,9 +80,47 @@ index 12ba7f0..74011f1 100644
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/AbsBoldStakingPool.sol#L24-L26
 
-
-
 ### **[ Low - 2 ]** 
+-----
+Similar to `TOB-ARBCH-32` from ToB audit. In `RollupUserLogic::addToDeposit` there is no validation for tokenAmount, thus `tokenAmount == 0` is possible, which allow user to waste gas for nothing. The same pattern apply for `RollupUserLogic::reduceDeposit`.
+
+```diff
+    function addToDeposit(address stakerAddress, uint256 tokenAmount) external onlyValidator whenNotPaused {
++       require(tokenAmount > 0, "NO_FUNDS_TO_DEPOSIT");
+        _addToDeposit(stakerAddress, tokenAmount);
+        /// @dev This is an external call, safe because it's at the end of the function
+        receiveTokens(tokenAmount);
+    }
+```
+
+```diff
+    function reduceDeposit(uint256 target) external onlyValidator whenNotPaused {
++       require(target > 0, "NO_AMOUNT_TO_REDUCE");
+        requireInactiveStaker(msg.sender);
+        // amount will be checked when creating an assertion
+        reduceStakeTo(msg.sender, target);
+    }
+```
+
+Add the following test in `Rollup.t.sol` and they will pass without the fix.
+
+```solidity
+    function testSuccessAddToDepositZeroAmount() public {
+        testSuccessConfirmEdgeByTime();
+        vm.prank(validator1);
+        userRollup.addToDeposit(validator1, 0);
+    }
+
+    function testSuccessReduceDepositZeroAmount() public {
+        testSuccessConfirmEdgeByTime();
+        vm.prank(validator1);
+        userRollup.reduceDeposit(0);
+    }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L349-L353
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L241-L245
+
+### **[ Low - 3 ]** 
 -----
 In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. Granted that `getPool` is actually used for that too, but that would be more consistent with `AssertionStakingPoolCreator.sol`. If this was totally intentional, then please ignore.
 
@@ -106,29 +144,6 @@ contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
 
-
-### **[ Low - 3 ]** 
------
-Similar to `TOB-ARBCH-32` from ToB audit. In `RollupUserLogic::addToDeposit` there is no validation for tokenAmount, thus `tokenAmount == 0` is possible, which allow user to waste gas for nothing. The same pattern apply for `RollupUserLogic::reduceDeposit`.
-
-```diff
-    function addToDeposit(address stakerAddress, uint256 tokenAmount) external onlyValidator whenNotPaused {
-        _addToDeposit(stakerAddress, tokenAmount);
-        /// @dev This is an external call, safe because it's at the end of the function
-        receiveTokens(tokenAmount);
-    }
-```
-
-Add the following test in `Rollup.t.sol` and it will pass.
-
-```solidity
-    function testSuccessAddToDepositZeroAmount() public {
-        testSuccessConfirmEdgeByTime();
-        vm.prank(validator1);
-        userRollup.addToDeposit(validator1, 0);
-    }
-```
-https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L349-L353
 
 
 ### **[ NC - 1 ]** 
