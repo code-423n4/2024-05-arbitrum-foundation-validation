@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "ladboy233",
+  "risk": "3",
+  "title": "fastConfirmNewAssertion in RollupUserLogic missing access control",
+  "issueId": 140,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/140"
+}
