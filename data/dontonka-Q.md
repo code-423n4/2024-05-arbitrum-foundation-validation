@@ -107,6 +107,29 @@ contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
 
 
+### **[ Low - 3 ]** 
+-----
+Similar to `TOB-ARBCH-32` from ToB audit. In `RollupUserLogic::addToDeposit` there is no validation for tokenAmount, thus `tokenAmount == 0` is possible, which allow user to waste gas for nothing. The same pattern apply for `RollupUserLogic::reduceDeposit`.
+
+```diff
+    function addToDeposit(address stakerAddress, uint256 tokenAmount) external onlyValidator whenNotPaused {
+        _addToDeposit(stakerAddress, tokenAmount);
+        /// @dev This is an external call, safe because it's at the end of the function
+        receiveTokens(tokenAmount);
+    }
+```
+
+Add the following test in `Rollup.t.sol` and it will pass.
+
+```solidity
+    function testSuccessAddToDepositZeroAmount() public {
+        testSuccessConfirmEdgeByTime();
+        vm.prank(validator1);
+        userRollup.addToDeposit(validator1, 0);
+    }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L349-L353
+
 
 ### **[ NC - 1 ]** 
 -----
