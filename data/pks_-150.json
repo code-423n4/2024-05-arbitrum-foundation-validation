@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "pks_",
+  "risk": "2",
+  "title": "Bold upgrade action can revert due to predicable rollup address",
+  "issueId": 150,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/150"
+}
