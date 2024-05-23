@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "shanb1605",
+  "risk": "2",
+  "title": "`forceInclusion()` can be called earlier before current timestamp than delay period.",
+  "issueId": 149,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/149"
+}
