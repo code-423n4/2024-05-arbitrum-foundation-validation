@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "ladboy233",
+  "risk": "3",
+  "title": "Lack of input validation in assertion pool allows malicious user to create a clearly invalid insertion to make staker lose fund.",
+  "issueId": 152,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/152"
+}
