@@ -159,9 +159,25 @@ contract EdgeStakingPoolCreator is IEdgeStakingPoolCreator {
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L20
 
-
-
 ### **[ NC - 1 ]** 
+-----
+The following code is `duplicated` in 2 places in `RollupUserLogic`, I would suggest to refactor in a single routine.
+1. [stakeOnNewAssertion](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L210-L216)
+2. [fastConfirmNewAssertion](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L291-L296)
+
+```solidity
+            if (!getAssertionStorage(newAssertionHash).isFirstChild) {
+                // only 1 of the children can be confirmed and get their stake refunded
+                // so we send the other children's stake to the loserStakeEscrow
+                // NOTE: if the losing staker have staked more than requiredStake, the excess stake will be stuck
+                IERC20(stakeToken).safeTransfer(loserStakeEscrow, assertion.beforeStateData.configData.requiredStake);
+            }
+        }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L210-L216
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L291-L296
+
+### **[ NC - 2 ]** 
 -----
 The first condition in `SequencerInbox::postUpgradeInit` is redundant as already checked in [_setBufferConfig](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L848).
 
@@ -185,7 +201,7 @@ The first condition in `SequencerInbox::postUpgradeInit` is redundant as already
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L166
 
 
-### **[ NC - 2 ]** 
+### **[ NC - 3 ]** 
 -----
 I think it would be easier to understand the code if you would do the following instead, which should be equivalent. At least `testRevertReduceDepositActive` and  `testRevertWithdrawActiveStake` are still happy with this change.
 ```diff
@@ -210,7 +226,7 @@ I think it would be easier to understand the code if you would do the following 
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupCore.sol#L565-L574
 
 
-### **[ NC - 3 ]** 
+### **[ NC - 4 ]** 
 -----
 Typo in a comment, "to keep" duplicated.
 ```diff
