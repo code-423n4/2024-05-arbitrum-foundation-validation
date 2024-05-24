@@ -122,6 +122,21 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/R
 
 ### **[ Low - 3 ]** 
 -----
+`RollupAdminLogic::setWasmModuleRoot` should ensure the contract is `paused` before proceeding, as otherwise this can create a major problem in the system.
+
+```diff
+-   function setWasmModuleRoot(bytes32 newWasmModuleRoot) external override {
++   function setWasmModuleRoot(bytes32 newWasmModuleRoot) external override whenPaused {
+        wasmModuleRoot = newWasmModuleRoot;
+        emit OwnerFunctionCalled(26);
+    }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupAdminLogic.sol#L281-L284
+
+
+
+### **[ Low - 4 ]** 
+-----
 In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. Granted that `getPool` is actually used for that too, but that would be more consistent with `AssertionStakingPoolCreator.sol`. If this was totally intentional, then please ignore.
 
 ```diff
