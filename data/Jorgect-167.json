@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Jorgect",
+  "risk": "2",
+  "title": "The config for the new upgrade can be mess up by an attacker in BOLDUpgradeAction contract",
+  "issueId": 167,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/167"
+}
