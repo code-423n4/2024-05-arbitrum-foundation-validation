@@ -1,16 +1,20 @@
 # Issue summary
 
+Here is the updated table with the issue numbers changed to L-1, L-2, L-3, etc., and the issue number centered in the first column:
+
 | Issue Number | Title                                                                                                       |
 |--------------|-------------------------------------------------------------------------------------------------------------|
-| 1            | User does not know how the edge id is computed when they want to stake for an edge pool                     |
-| 2            | Lack of incentive for staker to stake fund to assertion staking pool and edge staking pool                  |
-| 3            | Staking pool cannot distribute reward if the assertion/edge are confirmed                                   |
-| 4            | If a withdrawal address is a smart contract that is not capable of calling withdrawStakerFunds, fund is locked |
-| 5            | More documentation and comment and testing should be added in BOLDUpgradeAction.sol                         |
-| 6            | BoldUpgradeAction.sol does not follow the gov-action-contracts documentation and guideline                   |
-| 7            | Should consider using block.timestamp instead of block.number to track time elapse                          |
-| 8            | User may lose fee when creating Rollup                                                                      |
-| 9            | Refunded ETH is not handled when creating Rollup                                                            |
+|     L-1      | User does not know how the edge id is computed when they want to stake for an edge pool                     |
+|     L-2      | Lack of incentive for staker to stake fund to assertion staking pool and edge staking pool                  |
+|     L-3      | Staking pool cannot distribute reward if the assertion/edge are confirmed                                   |
+|     L-4      | If a withdrawal address is a smart contract that is not capable of calling withdrawStakerFunds, fund is locked |
+|     L-5      | More documentation and comment and testing should be added in BOLDUpgradeAction.sol                         |
+|     L-6      | BoldUpgradeAction.sol does not follow the gov-action-contracts documentation and guideline                   |
+|     L-7      | Should consider using block.timestamp instead of block.number to track time elapse                          |
+|     L-8      | User may lose fee when creating Rollup                                                                      |
+|     L-9      | Refunded ETH is not handled when creating Rollup                                                            |
+|    L-10      | Inconsistent check for validatorWhitelistDisabledfor in EdgeChallangeManager                                |
+|    L-11      | EdgeChallangeManger function missing onlyValidator check and whenNotPaused modifier                         |                                             |
 
 # user do not know the how the edge id computed when they wants to stake for a edge pool
 
@@ -376,3 +380,60 @@ after the helper contract [refund the ETH](https://github.com/code-423n4/2024-05
 @            payable(msg.sender).transfer(address(this).balance);
  }
 ```
+
+# Inconsistent check for validatorWhitelistDisabledfor in EdgeChallangeManager
+
+In EdgeChallangeManager#createLayerZeroEdge, [the check for validatorWhitelistDisabledfor](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L374) is done below:
+
+```solidity
+function createLayerZeroEdge(CreateEdgeArgs calldata args) external returns (bytes32) {
+    // Check if whitelist is enabled in the Rollup
+    // We only enforce whitelist in this function as it may exhaust resources
+    bool whitelistEnabled = !assertionChain.validatorWhitelistDisabled();
+
+    if (whitelistEnabled && !assertionChain.isValidator(msg.sender)) {
+        revert NotValidator(msg.sender);
+    }
+```
+
+while in RollUserLogic, the onlyValidator modifer is used,
+
+```solidity
+  modifier onlyValidator() {
+        require(isValidator[msg.sender] || validatorWhitelistDisabled, "NOT_VALIDATOR");
+        _;
+    }
+```
+
+it is recommended to use the onlyValidator modifer as well in EdgeChallangeManager for coding consistency.
+
+# EdgeChallangeManger function missing onlyValidator check and whenNotPaused modifier
+
+In Rollup user logic, the function all guarded with onlyValidator and whenNotPaused modifier
+
+```solidity
+  modifier onlyValidator() {
+        require(isValidator[msg.sender] || validatorWhitelistDisabled, "NOT_VALIDATOR");
+        _;
+    }
+```
+
+but in challange manager, only when [create layerzero edge](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L374), the  validatorWhitelistDisabled is checked:
+
+```solidity
+function createLayerZeroEdge(CreateEdgeArgs calldata args) external returns (bytes32) {
+    // Check if whitelist is enabled in the Rollup
+    // We only enforce whitelist in this function as it may exhaust resources
+    bool whitelistEnabled = !assertionChain.validatorWhitelistDisabled();
+
+    if (whitelistEnabled && !assertionChain.isValidator(msg.sender)) {
+        revert NotValidator(msg.sender);
+    }
+```
+
+but the function createLayerZeroEdge is missing whenNotPaused modifier,
+
+the function [bisect edge](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L451) and [confirm by time](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L511) and [confirm by one step proof](https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L539) are missing the validatorWhitelistDisabled check and whenNotPaused modifier,
+
+the impact is that when the validatorWhitelistDisabled is false or the roll up is falsed, the challange can continue to be confirmed when the challange should not be confirmed.
+
