@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "foxb868",
+  "risk": "2",
+  "title": "The order of operations when updating the `sendRoot` in the outbox contract and updating the internal state of the contract could lead to race condition.",
+  "issueId": 228,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/228"
+}
