@@ -15,4 +15,10 @@ Therefore, the modifier name does not accurately reflect the logic used within i
 
 ##### Instances
 
--
+- https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/AssertionStakingPool.sol#L8C1-L9C37
+
+- https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/EdgeStakingPool.sol#L9C1-L12C66
+
+- https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/bridge/DelayBuffer.sol#L7
+
+- https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/bridge/ISequencerInbox.sol#L12
