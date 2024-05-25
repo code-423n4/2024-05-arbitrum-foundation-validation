@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "foxb868",
+  "risk": "2",
+  "title": "`isDelayProofRequired` Can Miss New Delayed Messages",
+  "issueId": 222,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/222"
+}
