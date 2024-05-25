@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "0xbrett8571",
+  "risk": "2",
+  "title": "The contract will revert in scenarios where it should not, and vice versa, potentially allowing invalid or malicious inputs to be accepted.",
+  "issueId": 205,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/205"
+}
