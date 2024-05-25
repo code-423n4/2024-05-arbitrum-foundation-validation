@@ -2,7 +2,118 @@
 
 ##
 
-## [L-] ``mandatoryBisectionHeight()`` not implemented as per docs 
+## [L-]  Risk of Confirming Assertion Prematurely if ``totalTimeUnrivaled`` Equals ``confirmationThresholdBlock``
+
+The current check if (totalTimeUnrivaled < confirmationThresholdBlock) only reverts when totalTimeUnrivaled is strictly less than confirmationThresholdBlock. This means that if totalTimeUnrivaled is exactly equal to confirmationThresholdBlock, the condition is not met, and the code proceeds without reverting.
+
+However, in the context of confirming assertions, this can be problematic. If the totalTimeUnrivaled is exactly equal to confirmationThresholdBlock, it implies that the confirmationThresholdBlock has not been fully passed yet. To ensure that the assertion is confirmed only after the required confirmation blocks have fully passed, the check should also include the case where totalTimeUnrivaled is equal to confirmationThresholdBlock.
+
+
+```solidity
+FILE:2024-05-arbitrum-foundation/src/challengeV2/libraries/EdgeChallengeManagerLib.sol
+
+if (totalTimeUnrivaled < confirmationThresholdBlock) {
+            revert InsufficientConfirmationBlocks(totalTimeUnrivaled, confirmationThresholdBlock);
+        }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/EdgeChallengeManagerLib.sol#L741-L743
+
+### Recommended Mitigation
+
+```diff
+- if (totalTimeUnrivaled < confirmationThresholdBlock) {
++ if (totalTimeUnrivaled <= confirmationThresholdBlock) {
+            revert InsufficientConfirmationBlocks(totalTimeUnrivaled, confirmationThresholdBlock);
+        }
+```
+
+##
+
+## [L-] ``if (whitelistEnabled and not assertionChain.isValidator(msg.sender)) {``  check only allow other addresses creating edge if validatorWhitelistDisabled is set to true breaks the permission less concept as docs
+
+if validatorWhitelistDisabled is true, the requirement to be on the validator list (isValidator[msg.sender]) is bypassed, allowing any address to act as a validator. However, if validatorWhitelistDisabled is false, then the address must be explicitly listed as a validator in isValidator to pass the check. This breaks the permission less concept as per docs.
+
+```solidity
+FILE:  
+
+if (whitelistEnabled && !assertionChain.isValidator(msg.sender)) {
+            revert NotValidator(msg.sender);
+        }
+
+```  
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L376-L378
+
+##
+
+## [L-] ``onlyOwner`` can block any validator from creating new assertions and new edges once ``isValidator`` is set to false without reason
+
+The function setValidator allows the owner to set the validation status of multiple addresses. If a validator's status is suddenly set to false, it can impact the functions that rely on the isValidator status. Not possible to create new assertions and edges even they staked enough.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/rollup/RollupAdminLogic.sol
+
+function setValidator(address[] calldata _validator, bool[] calldata _val) external override {
+        require(_validator.length > 0, "EMPTY_ARRAY");
+        require(_validator.length == _val.length, "WRONG_LENGTH");
+
+        for (uint256 i = 0; i < _validator.length; i++) {
+            isValidator[_validator[i]] = _val[i];
+        }
+        emit OwnerFunctionCalled(6);
+    }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupAdminLogic.sol#L180-L188
+
+##
+
+## [L-] ``newStakeOnNewAssertion`` function will revert when normal user called when ``validatorWhitelistDisabled`` is false  
+
+The ``newStakeOnNewAssertion()`` function is declared as a public function, meaning that anyone can call this function to stake and create a new assertion. However, the ``stakeOnNewAssertion()`` function is only called by validators or when ``validatorWhitelistDisabled`` is set to true. This means that when normal users call this function, it reverts. 
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/rollup/RollupUserLogic.sol
+
+ function newStakeOnNewAssertion(
+        uint256 tokenAmount,
+        AssertionInputs calldata assertion,
+        bytes32 expectedAssertionHash,
+        address withdrawalAddress
+    ) public {
+        require(withdrawalAddress != address(0), "EMPTY_WITHDRAWAL_ADDRESS");
+        _newStake(tokenAmount, withdrawalAddress);
+        stakeOnNewAssertion(assertion, expectedAssertionHash);
+        /// @dev This is an external call, safe because it's at the end of the function
+        receiveTokens(tokenAmount);
+    } 
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupUserLogic.sol#L331-L342
+
+### Recommended Mitigation
+Add onlyValidator Modifier to newStakeOnNewAssertion() function
+
+```diff
+ function newStakeOnNewAssertion(
+        uint256 tokenAmount,
+        AssertionInputs calldata assertion,
+        bytes32 expectedAssertionHash,
+        address withdrawalAddress
+-    ) public {
++    ) public { onlyValidator
+        require(withdrawalAddress != address(0), "EMPTY_WITHDRAWAL_ADDRESS");
+        _newStake(tokenAmount, withdrawalAddress);
+        stakeOnNewAssertion(assertion, expectedAssertionHash);
+        /// @dev This is an external call, safe because it's at the end of the function
+        receiveTokens(tokenAmount);
+    } 
+
+```
+
+##
+
+## [L-] ``mandatoryBisectionHeight()`` not return expected results
 
 ### Expected Result
 The documentation states: ``Returns the highest power of 2 in the differing lower bits of start and end.`` This means the function should identify the highest power of 2 in the bits where start and end differ.
@@ -95,7 +206,7 @@ function setOutbox(IOutbox _outbox) external override {
 
 ##
 
-## [L-3] ``args.level`` value exceeds 254 then ``createLayerZeroEdge()`` function reverts 
+## [L-3] ``args.level`` value exceeds 255 then ``createLayerZeroEdge()`` function reverts 
 
 args.level is uint8 type this can be accept the values up to 0-255. But if we add the 255 then this function reverts.
 
@@ -269,6 +380,26 @@ FILE: 2024-05-arbitrum-foundation/src/challengeV2/libraries
 
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/EdgeChallengeManagerLib.sol#L574-L588
+
+
+##
+
+## [L-] if (totalTimeUnrivaled < confirmationThresholdBlock) { Mismatched comparisons(uitn256 type with uint64)
+
+The mismatched comparison between totalTimeUnrivaled (which is uint256) and confirmationThresholdBlock (which is uint64).
+
+```solidity
+FILE:2024-05-arbitrum-foundation/src/challengeV2/libraries
+/EdgeChallengeManagerLib.sol
+
+if (totalTimeUnrivaled < confirmationThresholdBlock) {
+            revert InsufficientConfirmationBlocks(totalTimeUnrivaled, confirmationThresholdBlock);
+        }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/EdgeChallengeManagerLib.sol#L741-L743
+
+## [L-] 
 
 
 
