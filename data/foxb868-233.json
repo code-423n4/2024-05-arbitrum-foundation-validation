@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "foxb868",
+  "risk": "2",
+  "title": "genesisAssertionHash function may produce an incorrect hash value for the genesis assertion, which could potentially lead to inconsistencies in the system.",
+  "issueId": 233,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/233"
+}
