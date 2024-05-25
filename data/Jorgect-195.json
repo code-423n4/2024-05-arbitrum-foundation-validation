@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Jorgect",
+  "risk": "3",
+  "title": "The perform function in the BOLDUpgradeAction contract can be griefing by front-running the RollupProxy deploymen with same `salt` param",
+  "issueId": 195,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/195"
+}
