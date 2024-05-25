@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "0xbrett8571",
+  "risk": "2",
+  "title": "If the newly created lower child edge is not properly tracked and its existence is not recorded, it can lead to data loss. BisectEdge Missing EdgeAdded Event for New Child Edge (EdgeId 0).",
+  "issueId": 199,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/199"
+}
