@@ -156,6 +156,20 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/R
 
 ### **[ Low - 5 ]** 
 -----
+Seems like that `RollupUserLogic::removeWhitelistAfterValidatorAfk` should also have the `whenNotPaused` modifier as changing the state of the contract.
+```diff
+-   function removeWhitelistAfterValidatorAfk() external {
++   function removeWhitelistAfterValidatorAfk() external whenNotPaused {
+        require(!validatorWhitelistDisabled, "WHITELIST_DISABLED");
+        require(_validatorIsAfk(), "VALIDATOR_NOT_AFK");
+        validatorWhitelistDisabled = true;
+    }
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L71
+
+
+### **[ Low - 6 ]** 
+-----
 In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. Granted that `getPool` is actually used for that too, but that would be more consistent with `AssertionStakingPoolCreator.sol`. If this was totally intentional, then please ignore.
 
 ```diff
