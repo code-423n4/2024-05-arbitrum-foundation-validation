@@ -137,6 +137,25 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/R
 
 ### **[ Low - 4 ]** 
 -----
+In `RollupUserLogic::stakeOnNewAssertion` there is a logic that enforce that assertion can't be posted earlier than `minimumAssertionPeriod`, which in the documentation is stating `1 hour`. Nevertheless, currently on testnet the current value assigned to `minimumAssertionPeriod is zero`, which disable this feature completely, and the assumption would be that the same value is deployed in mainnet, which seems unexpected.
+```solidity
+        if (!overflowAssertion) {
+            uint256 timeSincePrev = block.number - getAssertionStorage(prevAssertion).createdAtBlock;
+            // Verify that assertion meets the minimum Delta time requirement
+            require(timeSincePrev >= minimumAssertionPeriod, "TIME_DELTA");
+        }
+```
+
+You can retrieve this value from testnet using the following command:
+```
+ cast call 0x43d2372C88C3C074240Df708D696c6117283E88E --rpc-url $RPC_SEPOLIA_URL "minimumAssertionPeriod()"
+```
+
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/rollup/RollupUserLogic.sol#L204-L208
+
+
+### **[ Low - 5 ]** 
+-----
 In `EdgeStakingPoolCreator::createPool` you should add the `contract address` in the event as otherwise it can be lost easily. Granted that `getPool` is actually used for that too, but that would be more consistent with `AssertionStakingPoolCreator.sol`. If this was totally intentional, then please ignore.
 
 ```diff
