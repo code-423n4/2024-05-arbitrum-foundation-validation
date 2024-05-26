@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "aariiif",
+  "risk": "2",
+  "title": "Missing Approval Check for ERC-20 Token Transfers in `_deployFactories` Function",
+  "issueId": 244,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/244"
+}
