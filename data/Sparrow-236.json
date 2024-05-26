@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Sparrow",
+  "risk": "2",
+  "title": "Exploitable Address Collision Vulnerability in `StakingPoolCreatorUtils`Library",
+  "issueId": 236,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/236"
+}
