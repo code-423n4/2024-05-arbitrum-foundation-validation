@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "aariiif",
+  "risk": "2",
+  "title": "Incorrect Calculation of Merkle Root in MerkleTreeLib.sol:root Function",
+  "issueId": 245,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/245"
+}
