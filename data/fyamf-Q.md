@@ -1,5 +1,5 @@
 ## Issue1
-When the buffer config is sett through `setBufferConfig`, it is not checked that `bufferConfig_.max` be lower than `bufferConfig_.threshold`.
+When the buffer config is set through `setBufferConfig`, it is not checked that `bufferConfig_.max` be lower than `bufferConfig_.threshold`.
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/main/src/bridge/SequencerInbox.sol#L947
 ```solidity
 function _setBufferConfig(BufferConfig memory bufferConfig_) internal {
