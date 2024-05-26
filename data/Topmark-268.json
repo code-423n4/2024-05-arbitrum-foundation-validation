@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Topmark",
+  "risk": "2",
+  "title": "Wrong TotalTimeUnrivaled Implementation when Edges Upper ChildId is not Zero",
+  "issueId": 268,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/268"
+}
