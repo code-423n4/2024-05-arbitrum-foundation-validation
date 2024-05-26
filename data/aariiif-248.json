@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "aariiif",
+  "risk": "2",
+  "title": "Duplicate Validators in setValidator Function Call May Lead to Unexpected Behavior or Security Issues",
+  "issueId": 248,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/248"
+}
