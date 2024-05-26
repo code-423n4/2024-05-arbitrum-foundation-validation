@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "a12345",
+  "risk": "3",
+  "title": "A malicious/compromised oracle could be used to confirm wrong assertions, slash multiple honest challengers (validators)",
+  "issueId": 239,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/239"
+}
