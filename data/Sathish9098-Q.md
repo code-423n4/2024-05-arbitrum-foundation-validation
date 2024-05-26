@@ -2,7 +2,62 @@
 
 ##
 
-## [L-]  Risk of Confirming Assertion Prematurely if ``totalTimeUnrivaled`` Equals ``confirmationThresholdBlock``
+## [L-] ``newStakeOnNewAssertion`` reverts all calls when contract paused
+
+There is a potential flaw related to the function stakeOnNewAssertion being called within newStakeOnNewAssertion. The stakeOnNewAssertion function has the whenNotPaused modifiers, meaning it should only be executed only when the contract is not paused. However, these conditions are not enforced within the newStakeOnNewAssertion function, leading to potential inconsistencies.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/rollup
+/RollupUserLogic.sol
+
+function newStakeOnNewAssertion(
+        uint256 tokenAmount,
+        AssertionInputs calldata assertion,
+        bytes32 expectedAssertionHash,
+        address withdrawalAddress
+    ) public {
+        require(withdrawalAddress != address(0), "EMPTY_WITHDRAWAL_ADDRESS");
+        _newStake(tokenAmount, withdrawalAddress);
+        stakeOnNewAssertion(assertion, expectedAssertionHash);
+        /// @dev This is an external call, safe because it's at the end of the function
+        receiveTokens(tokenAmount);
+    }
+
+
+
+function stakeOnNewAssertion(AssertionInputs calldata assertion, bytes32 expectedAssertionHash)
+        public
+        onlyValidator
+        whenNotPaused
+    {
+
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupUserLogic.sol#L163-L167
+
+### Recommended Mitigation
+
+```diff
+FILE: 2024-05-arbitrum-foundation/src/rollup
+/RollupUserLogic.sol
+
+function newStakeOnNewAssertion(
+        uint256 tokenAmount,
+        AssertionInputs calldata assertion,
+        bytes32 expectedAssertionHash,
+        address withdrawalAddress
+-    ) public {
++    ) public whenNotPaused {
+        require(withdrawalAddress != address(0), "EMPTY_WITHDRAWAL_ADDRESS");
+        _newStake(tokenAmount, withdrawalAddress);
+        stakeOnNewAssertion(assertion, expectedAssertionHash);
+        /// @dev This is an external call, safe because it's at the end of the function
+        receiveTokens(tokenAmount);
+    }
+
+```
+
+## [L-] Risk of Confirming Assertion Prematurely if ``totalTimeUnrivaled`` Equals ``confirmationThresholdBlock``
 
 The current check if (totalTimeUnrivaled < confirmationThresholdBlock) only reverts when totalTimeUnrivaled is strictly less than confirmationThresholdBlock. This means that if totalTimeUnrivaled is exactly equal to confirmationThresholdBlock, the condition is not met, and the code proceeds without reverting.
 
@@ -144,6 +199,47 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
+## [L-] Risk of Address Collisions and Contract Overwrites Due to Hardcoded ``Salt`` in ``CREATE2``
+
+The hardcoded salt makes the address predictable. An attacker can precompute the address and potentially perform malicious activities such as front-running the contract deployment or targeting the contract for specific attacks.This predictability can result in several critical issues, including address collisions and contract overwrites.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/assertionStakingPool
+/StakingPoolCreatorUtils.sol
+
+ function getPool(bytes memory creationCode, bytes memory args) internal view returns (address) {
+        bytes32 bytecodeHash = keccak256(abi.encodePacked(creationCode, args));
+        address pool = Create2.computeAddress(0, bytecodeHash, address(this));
+        if (Address.isContract(pool)) {
+            return pool;
+        } else {
+            revert PoolDoesntExist();
+        }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/StakingPoolCreatorUtils.sol#L15
+
+### Recommended Mitigation
+Use dynamic salt values 
+
+```diff
+
+- function getPool(bytes memory creationCode, bytes memory args) internal view
++ function getPool(bytes32 salt,bytes memory creationCode, bytes memory args) internal view  returns (address) {
+        bytes32 bytecodeHash = keccak256(abi.encodePacked(creationCode, args));
+-        address pool = Create2.computeAddress(0, bytecodeHash, address(this));
++        address pool = Create2.computeAddress(salt, bytecodeHash, address(this));
+if (Address.isContract(pool)) {
+            return pool;
+        } else {
+            revert PoolDoesntExist();
+        }
+
+```
+
+
+##
+
 ## [L-1] ``expectedAssertionHash == bytes32(0) || getAssertionStorage(expectedAssertionHash).status == AssertionStatus.NoAssertion`` condition check is still vulnerable to reorg issues
 
 Tts associated check for expectedAssertionHash aim to protect against certain issues that may arise from blockchain reorganizations (reorgs). However, despite these precautions, there can still be vulnerabilities.
@@ -206,7 +302,7 @@ function setOutbox(IOutbox _outbox) external override {
 
 ##
 
-## [L-3] ``args.level`` value exceeds 255 then ``createLayerZeroEdge()`` function reverts 
+## [L-3] ``args.level`` if value 255 then ``createLayerZeroEdge()`` function reverts 
 
 args.level is uint8 type this can be accept the values up to 0-255. But if we add the 255 then this function reverts.
 
@@ -382,6 +478,8 @@ FILE: 2024-05-arbitrum-foundation/src/challengeV2/libraries
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/EdgeChallengeManagerLib.sol#L574-L588
 
 
+
+
 ##
 
 ## [L-] if (totalTimeUnrivaled < confirmationThresholdBlock) { Mismatched comparisons(uitn256 type with uint64)
@@ -399,7 +497,68 @@ if (totalTimeUnrivaled < confirmationThresholdBlock) {
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/EdgeChallengeManagerLib.sol#L741-L743
 
-## [L-] 
+##
+
+## [L-] Risks of Deployment Failures from Insufficient Validation of ``creationCode`` and ``args`` in ``getPool`` Function
+
+Without proper validation of the ``creationCode``, and ``args``, there is a risk of deploying multiple contracts to the same address. This can cause conflicts and overwrite existing contracts, leading to unpredictable behavior and potential loss of funds.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/assertionStakingPool
+/StakingPoolCreatorUtils.sol
+
+function getPool(bytes memory creationCode, bytes memory args) internal view returns (address) {
+        bytes32 bytecodeHash = keccak256(abi.encodePacked(creationCode, args));
+        address pool = Create2.computeAddress(0, bytecodeHash, address(this));
+        if (Address.isContract(pool)) {
+            return pool;
+        } else {
+            revert PoolDoesntExist();
+        }
+    }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/StakingPoolCreatorUtils.sol#L13-L20
+
+### Recommended Mitigation
+- Ensure that ``creationCode`` is not empty
+- Check that ``creationCode`` corresponds to a valid contract bytecode.
+- Ensure that ``args`` are correctly encoded 
+
+
+##
+
+## [L-] Consequences of Missing Validation in critical ``setMinimumAssertionPeriod`` and  ``setBaseStake``  Functions
+
+The function setMinimumAssertionPeriod sets the minimumAssertionPeriod state variable to newPeriod without performing any validation checks. This lack of validation can lead to the assignment of invalid or unreasonable values, which can adversely affect the contract's behavior and security. Same to ``setBaseStake()`` function
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/rollup
+/RollupAdminLogic.sol
+
+function setMinimumAssertionPeriod(uint256 newPeriod) external override {
+        minimumAssertionPeriod = newPeriod;
+        emit OwnerFunctionCalled(8);
+    }
+
+function setBaseStake(uint256 newBaseStake) external override {
+        baseStake = newBaseStake;
+        emit OwnerFunctionCalled(12);
+    }
+
+``` 
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupAdminLogic.sol#L204-L207
+
+##
+
+
+
+
+
+
+
+
+
 
 
 
