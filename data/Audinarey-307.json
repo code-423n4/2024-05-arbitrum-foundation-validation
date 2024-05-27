@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Audinarey",
+  "risk": "3",
+  "title": "`whenNotPaused` modifier is not properly implemented for Withdrawals in BOLD `rollup`",
+  "issueId": 307,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/307"
+}
