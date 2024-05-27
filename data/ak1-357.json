@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "ak1",
+  "risk": "2",
+  "title": "RollupAdminLogic : incorrect `minimumAssertionPeriod` when the contract is created.",
+  "issueId": 357,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/357"
+}
