@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "zanderbyte",
+  "risk": "2",
+  "title": "Checks that ensure the call is from EOA might not hold true in near future",
+  "issueId": 329,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/329"
+}
