@@ -8,6 +8,7 @@
 | [L-02] | Upgrade of Rollups can be DOSsed by predeploying a contract to the computed CREATE2 address  |
 | [L-03] | It is possible to bloat the inbox with spam messages by forceInclusion using a low enough `l1BlockAndTime` |
 | [L-04] | The sync status of a Buffer can be manipulated by forceInclusion with low `l1BlockAndTime` |
+| [L-05] | It may be possible to claim an edge multiple times and manually increase timerCache |
 
 ## Low Findings
 
@@ -146,3 +147,33 @@ The user can therefore manipulate the current BufferConfig to show synced or upd
 
 #### Recommendation
 1. Before updating the buffer with the `l1BlockAndTime[0]`, ensure this value meets some requirements such as a minimum value. 
+
+### [L-05] It may be possible to claim an edge multiple times and manually increase timerCache
+
+- Lines of Code: https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/EdgeChallengeManagerLib.sol#L520-L530
+
+#### Impact
+Creators of an edge can update the timers for their edge by claiming an edge which is one step below their created edge. 
+```
+function updateTimerCacheByClaim(
+        EdgeStore storage store,
+        bytes32 edgeId,
+        bytes32 claimingEdgeId,
+        uint8 numBigStepLevel
+    ) internal returns (bool, uint256) {
+        // calculate the time unrivaled without inheritance
+        uint256 totalTimeUnrivaled = timeUnrivaled(store, edgeId);
+        checkClaimIdLink(store, edgeId, claimingEdgeId, numBigStepLevel);
+@>        totalTimeUnrivaled += store.edges[claimingEdgeId].totalTimeUnrivaledCache;
+@>        return updateTimerCache(store, edgeId, totalTimeUnrivaled);
+    }
+```
+Each time an edge is claimed the timer cache is updated with the newly incremented `totalTimeUnrivaled`. 
+However, there is no check for if that claim has been claimed by that edge. 
+
+- https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/EdgeChallengeManagerLib.sol#L689C5-L701C41
+
+Everytime this function is called, the totalTimeUnrivaled of the edgeId is increased. With sufficient time, the edge can be claimed to be the winning edge
+
+#### Recommendation
+1. Include a check for if that claimEdge has already been claimed within `checkClaimIdLink`
