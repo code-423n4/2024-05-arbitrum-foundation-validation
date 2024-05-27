@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "peanuts",
+  "risk": "2",
+  "title": "If both validator's and challenger's assertion is not honest, the wrong assertion can be confirmed with a winner getting back the bond",
+  "issueId": 347,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/347"
+}
