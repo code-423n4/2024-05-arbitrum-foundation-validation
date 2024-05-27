@@ -2,7 +2,7 @@
 
 ##
 
-## [L-] ``newStakeOnNewAssertion`` reverts all calls when contract paused
+## [L-1] ``newStakeOnNewAssertion`` function reverts all calls when contract paused
 
 There is a potential flaw related to the function stakeOnNewAssertion being called within newStakeOnNewAssertion. The stakeOnNewAssertion function has the whenNotPaused modifiers, meaning it should only be executed only when the contract is not paused. However, these conditions are not enforced within the newStakeOnNewAssertion function, leading to potential inconsistencies.
 
@@ -57,7 +57,7 @@ function newStakeOnNewAssertion(
 
 ```
 
-## [L-] Risk of Confirming Assertion Prematurely if ``totalTimeUnrivaled`` Equals ``confirmationThresholdBlock``
+## [L-2] Risk of Confirming Assertion Prematurely if ``totalTimeUnrivaled`` Equals ``confirmationThresholdBlock``
 
 The current check if (totalTimeUnrivaled < confirmationThresholdBlock) only reverts when totalTimeUnrivaled is strictly less than confirmationThresholdBlock. This means that if totalTimeUnrivaled is exactly equal to confirmationThresholdBlock, the condition is not met, and the code proceeds without reverting.
 
@@ -82,10 +82,9 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
             revert InsufficientConfirmationBlocks(totalTimeUnrivaled, confirmationThresholdBlock);
         }
 ```
-
 ##
 
-## [L-] ``if (whitelistEnabled and not assertionChain.isValidator(msg.sender)) {``  check only allow other addresses creating edge if validatorWhitelistDisabled is set to true breaks the permission less concept as docs
+## [L-3] ``if (whitelistEnabled and not assertionChain.isValidator(msg.sender)) {``  check only allow other addresses creating edge if validatorWhitelistDisabled is set to true
 
 if validatorWhitelistDisabled is true, the requirement to be on the validator list (isValidator[msg.sender]) is bypassed, allowing any address to act as a validator. However, if validatorWhitelistDisabled is false, then the address must be explicitly listed as a validator in isValidator to pass the check. This breaks the permission less concept as per docs.
 
@@ -101,7 +100,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] ``onlyOwner`` can block any validator from creating new assertions and new edges once ``isValidator`` is set to false without reason
+## [L-4] ``onlyOwner`` can block any validator from creating new assertions and new edges once ``isValidator`` is set to false without reason
 
 The function setValidator allows the owner to set the validation status of multiple addresses. If a validator's status is suddenly set to false, it can impact the functions that rely on the isValidator status. Not possible to create new assertions and edges even they staked enough.
 
@@ -121,9 +120,10 @@ function setValidator(address[] calldata _validator, bool[] calldata _val) exter
 ```
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupAdminLogic.sol#L180-L188
 
+
 ##
 
-## [L-] ``newStakeOnNewAssertion`` function will revert when normal user called when ``validatorWhitelistDisabled`` is false  
+## [L-5] ``newStakeOnNewAssertion`` function will revert when normal user called when ``validatorWhitelistDisabled`` is false  
 
 The ``newStakeOnNewAssertion()`` function is declared as a public function, meaning that anyone can call this function to stake and create a new assertion. However, the ``stakeOnNewAssertion()`` function is only called by validators or when ``validatorWhitelistDisabled`` is set to true. This means that when normal users call this function, it reverts. 
 
@@ -168,7 +168,7 @@ Add onlyValidator Modifier to newStakeOnNewAssertion() function
 
 ##
 
-## [L-] ``mandatoryBisectionHeight()`` not return expected results
+## [L-6] ``mandatoryBisectionHeight()`` not return expected results
 
 ### Expected Result
 The documentation states: ``Returns the highest power of 2 in the differing lower bits of start and end.`` This means the function should identify the highest power of 2 in the bits where start and end differ.
@@ -199,7 +199,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] Risk of Address Collisions and Contract Overwrites Due to Hardcoded ``Salt`` in ``CREATE2``
+## [L-7] Risk of Address Collisions and Contract Overwrites Due to Hardcoded ``Salt`` in ``CREATE2``
 
 The hardcoded salt makes the address predictable. An attacker can precompute the address and potentially perform malicious activities such as front-running the contract deployment or targeting the contract for specific attacks.This predictability can result in several critical issues, including address collisions and contract overwrites.
 
@@ -236,35 +236,9 @@ if (Address.isContract(pool)) {
         }
 
 ```
-
-
 ##
 
-## [L-1] ``expectedAssertionHash == bytes32(0) || getAssertionStorage(expectedAssertionHash).status == AssertionStatus.NoAssertion`` condition check is still vulnerable to reorg issues
-
-Tts associated check for expectedAssertionHash aim to protect against certain issues that may arise from blockchain reorganizations (reorgs). However, despite these precautions, there can still be vulnerabilities.
-
-- During a reorg, transactions can be reordered or included in different blocks. If a transaction that creates an assertion with a specific ``expectedAssertionHash`` is reprocessed after a reorg, the check might fail to recognize that the assertion was already processed, leading to inconsistent states or duplicate processing.
-
-- Simultaneous transactions across competing chains can create race conditions, where multiple transactions with the same expectedAssertionHash are processed in different forks.
-
-```solidity
-FILE: 2024-05-arbitrum-foundation/src/rollup/RollupUserLogic.sol
-
-// Early revert on duplicated assertion if expectedAssertionHash is set
-        require(
-            expectedAssertionHash == bytes32(0)
-                || getAssertionStorage(expectedAssertionHash).status == AssertionStatus.NoAssertion,
-            "EXPECTED_ASSERTION_SEEN"
-        );
-
-
-```
-https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupUserLogic.sol#L169-L173
-
-##
-
-## [L-2] Misleading comment in setOutbox() function
+## [L-8] Misleading comment in setOutbox() function
 
 The current comment indicates that the function is adding a contract authorized to put messages into the rollup's inbox, but the function itself is setting an outbox contract and registering it with the bridge, rather than directly dealing with the inbox.
 
@@ -302,7 +276,7 @@ function setOutbox(IOutbox _outbox) external override {
 
 ##
 
-## [L-3] ``args.level`` if value 255 then ``createLayerZeroEdge()`` function reverts 
+## [L-9] ``args.level`` if value 255 then ``createLayerZeroEdge()`` function reverts 
 
 args.level is uint8 type this can be accept the values up to 0-255. But if we add the 255 then this function reverts.
 
@@ -327,7 +301,7 @@ EdgeType eType = ChallengeEdgeLib.levelToType(args.level, NUM_BIGSTEP_LEVEL);
 
 ##
 
-## [L-] ``if (address(st) != address(0) && sa != 0) {``  current implementation allows all erc20 tokens which breaks the docs   
+## [L-10] ``if (address(st) != address(0) && sa != 0) {``  current implementation allows all erc20 tokens which breaks the docs   
 
 ```
 it is assumed to be WETH or a token that is not fee-on-transfer, rebasing, have a transfer hook or otherwise have non-standard ERC20 logics.
@@ -337,7 +311,7 @@ it is assumed to be WETH or a token that is not fee-on-transfer, rebasing, have 
 This are all the tokens allowed while staking but current implementation allow all ERC20 tokens without checks.
 
 ```solidity
-FILE: Breadcrumbs2024-05-arbitrum-foundation/src/challengeV2
+FILE: 2024-05-arbitrum-foundation/src/challengeV2
 /EdgeChallengeManager.sol
 
  IERC20 st = stakeToken;
@@ -355,7 +329,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] ``if (ard.assertionHash != args.claimId) {`` Potentially Redundant Check Between assertionHash and claimId in ``layerZeroTypeSpecificChecks() `` function
+## [L-11] ``if (ard.assertionHash != args.claimId) {`` Potentially Redundant Check Between assertionHash and claimId in ``layerZeroTypeSpecificChecks() `` function
 
 There is no possibility that values are different. ``args.claimId`` value only assigned to ``ard.assertionHash`` when creating ``ard`` variable .
 
@@ -390,7 +364,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] Incorrect Comment Describing Execution State Check in layerZeroTypeSpecificChecks() Function
+## [L-12] Incorrect Comment Describing Execution State Check in layerZeroTypeSpecificChecks() Function
 
 ```solidity
 FILE:2024-05-arbitrum-foundation/src/challengeV2/libraries
@@ -427,7 +401,7 @@ Add appropriate comments
 
 ##
 
-## [L-] Incorrect Zero Value Check for ``bytes32`` Type in ``layerZeroTypeSpecificChecks()`` Function
+## [L-13] Incorrect Zero Value Check for ``bytes32`` Type in ``layerZeroTypeSpecificChecks()`` Function
 
 Using if (ard.assertionHash == 0) to check if a bytes32 value is zero can lead to incorrect behavior or revert errors because 0 is implicitly treated as a uint256, not a bytes32. Comparing a bytes32 directly to a uint256 will likely result unintended behavior if the compiler allows it.
 
@@ -450,7 +424,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] ``mandatoryBisectionHeight(ce.startHeight, ce.endHeight)`` function will revert in some cases instead of returning ``middleHeight`` value
+## [L-14] ``mandatoryBisectionHeight(ce.startHeight, ce.endHeight)`` function will revert in some cases instead of returning ``middleHeight`` value
 
 The function reverts if end - start < 2. This means that for very close values of start and end (where the difference is less than 2), the function will not compute a bisection height but will instead revert with an error.
 
@@ -482,7 +456,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] if (totalTimeUnrivaled < confirmationThresholdBlock) { Mismatched comparisons(uitn256 type with uint64)
+## [L-15] if (totalTimeUnrivaled < confirmationThresholdBlock) { Mismatched comparisons(uitn256 type with uint64)
 
 The mismatched comparison between totalTimeUnrivaled (which is uint256) and confirmationThresholdBlock (which is uint64).
 
@@ -499,7 +473,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] Risks of Deployment Failures from Insufficient Validation of ``creationCode`` and ``args`` in ``getPool`` Function
+## [L-16] Risks of Failures from Insufficient Validation of ``creationCode`` and ``args`` in ``getPool`` Function
 
 Without proper validation of the ``creationCode``, and ``args``, there is a risk of deploying multiple contracts to the same address. This can cause conflicts and overwrite existing contracts, leading to unpredictable behavior and potential loss of funds.
 
@@ -528,7 +502,7 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 
 ##
 
-## [L-] Consequences of Missing Validation in critical ``setMinimumAssertionPeriod`` and  ``setBaseStake``  Functions
+## [L-17] Consequences of Missing Validation in critical ``setMinimumAssertionPeriod`` and  ``setBaseStake``  Functions
 
 The function setMinimumAssertionPeriod sets the minimumAssertionPeriod state variable to newPeriod without performing any validation checks. This lack of validation can lead to the assignment of invalid or unreasonable values, which can adversely affect the contract's behavior and security. Same to ``setBaseStake()`` function
 
@@ -550,6 +524,163 @@ function setBaseStake(uint256 newBaseStake) external override {
 https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupAdminLogic.sol#L204-L207
 
 ##
+
+## [L-18] Inefficient Array Resizing in ``append()`` Function
+
+The gas cost of the append function might exceed the gas limit set for a transaction. This gas limit specifies the maximum amount of gas a user is willing to spend on a transaction. This can be problematic, especially in situations where the exact size of the appended data might not be known beforehand.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/challengeV2/libraries
+/ArrayUtilsLib.sol
+
+function append(bytes32[] memory arr, bytes32 newItem) internal pure returns (bytes32[] memory) {
+        bytes32[] memory clone = new bytes32[](arr.length + 1);
+        for (uint256 i = 0; i < arr.length; i++) {
+            clone[i] = arr[i];
+        }
+        clone[clone.length - 1] = newItem;
+        return clone;
+    }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/libraries/ArrayUtilsLib.sol#L16
+
+### Recommended Mitigation
+Use a resizable array library like OwnableArray from the OpenZeppelin Contracts library (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol). These libraries offer functions to append elements dynamically without the need to manually allocate and copy the entire array.
+
+##
+
+## [L-19] ``block.number >= assertion.createdAtBlock + prevConfig.confirmPeriodBlocks`` not implemented as per docs
+
+Comment: "Check that deadline has passed"
+
+This implies the deadline should be strictly in the past, meaning the current block number must be greater than the deadline block number.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/rollup
+/RollupUserLogic.sol
+
+// Check that deadline has passed
+        require(block.number >= assertion.createdAtBlock + prevConfig.confirmPeriodBlocks, "BEFORE_DEADLINE");
+
+```
+
+### Recommended Mitgation
+1) change comment as per implementation
+
+```solidity
+
+// Check that deadline has passed or equal
+        require(block.number >= assertion.createdAtBlock + prevConfig.confirmPeriodBlocks, "BEFORE_DEADLINE");
+
+```
+
+2. Change code as per docs
+
+```solidity
+
+// Check that deadline has passed
+        require(block.number > assertion.createdAtBlock + prevConfig.confirmPeriodBlocks, "BEFORE_DEADLINE");
+
+```
+
+##
+
+## [L-20]  reduceStakeTo Function Allows Call Even with Zero Staked Amount
+
+The reduceStakeTo function does not have any check to prevent it from being called when staker.amountStaked is zero. This means if a staker's amountStaked is zero, the function can still be called, and it would set the amountStaked to the target value, which could result in unintended behavior.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/rollup
+/RollupCore.sol
+
+ function reduceStakeTo(address stakerAddress, uint256 target) internal returns (uint256) {
+        Staker storage staker = _stakerMap[stakerAddress];
+        address withdrawalAddress = staker.withdrawalAddress;
+        uint256 current = staker.amountStaked;
+        require(target <= current, "TOO_LITTLE_STAKE");
+        uint256 amountWithdrawn = current - target;
+        staker.amountStaked = target;
+        increaseWithdrawableFunds(withdrawalAddress, amountWithdrawn);
+        emit UserStakeUpdated(stakerAddress, withdrawalAddress, current, target);
+        return amountWithdrawn;
+    }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupCore.sol#L300-L310
+
+### Recommended Mitigation
+
+staker.amountStaked is 0 then the call should be reverted
+
+require(current > 0,"zero amount staked");
+
+##
+
+## [L-21] Current ``newStakeOnNewAssertion()`` implementation allows 2 evil parties creates firstchild and secondchild assertions without honest party 
+
+if validators has enough stakes then evil parties alone can create the  ``firstchild``  , ``secondchild``  assertions with different ``endhistoryRoot`` without honest party.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/rollup
+/RollupUserLogic.sol
+
+function newStakeOnNewAssertion(
+        uint256 tokenAmount,
+        AssertionInputs calldata assertion,
+        bytes32 expectedAssertionHash,
+        address withdrawalAddress
+    ) public {
+        require(withdrawalAddress != address(0), "EMPTY_WITHDRAWAL_ADDRESS");
+        _newStake(tokenAmount, withdrawalAddress);
+        stakeOnNewAssertion(assertion, expectedAssertionHash);
+        /// @dev This is an external call, safe because it's at the end of the function
+        receiveTokens(tokenAmount);
+    }
+
+``` 
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/rollup/RollupUserLogic.sol#L331-L342
+
+##
+
+## [L-22]  Unrestricted Stake Refund - Arbitrary Address Can call ``refundStake()`` function 
+
+The function doesn't perform any checks on the caller's identity before initiating a refund. This means anyone, even an arbitrary address, can call refundStake with an edge ID and potentially creates the unintended call without knowing the staker. There is no fund lose but this will cause unintended consequences.
+
+```solidity
+FILE: 2024-05-arbitrum-foundation/src/challengeV2
+/EdgeChallengeManager.sol
+
+ function refundStake(bytes32 edgeId) public {
+        ChallengeEdge storage edge = store.get(edgeId);
+        // setting refunded also do checks that the edge cannot be refunded twice
+        edge.setRefunded();
+
+        IERC20 st = stakeToken;
+        uint256 sa = stakeAmounts[edge.level];
+        // no need to refund with the token or amount where zero'd out
+        if (address(st) != address(0) && sa != 0) {
+            st.safeTransfer(edge.staker, sa);
+        }
+
+        emit EdgeRefunded(edgeId, store.edges[edgeId].mutualId(), address(st), sa);
+    }
+
+```
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L572-L585
+
+### Recommended Mitigation 
+Check only staker call this refundStake function 
+
+```solidity
+require(edge.staker == msg.sender,"only staker possible to claim");
+
+```
+
+
+
+  
+
 
 
 
