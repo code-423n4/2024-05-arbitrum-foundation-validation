@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "Shubham",
+  "risk": "2",
+  "title": "Transferring tokens will reverts on Arbitrum when `stakeToken` is `WETH`",
+  "issueId": 309,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/309"
+}
