@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "gesha17",
+  "risk": "3",
+  "title": "afterGS.getInboxPosition() has a range of valid values, rather than a singular valid value, allowing multiple valid sibling assertions to be created.",
+  "issueId": 325,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/325"
+}
