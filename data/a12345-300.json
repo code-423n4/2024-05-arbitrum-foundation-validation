@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "a12345",
+  "risk": "3",
+  "title": "Rouge oracle can be manipulated to affect the validity of assertions, potentially leading to \"wrong assertions\" to be confirmed ",
+  "issueId": 300,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/300"
+}
