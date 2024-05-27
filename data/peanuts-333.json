@@ -1,0 +1,8 @@
+{
+  "contest": 375,
+  "handle": "peanuts",
+  "risk": "2",
+  "title": "createPool in EdgeStakingPoolCreator is suspicious of the reorg attack",
+  "issueId": 333,
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/333"
+}
