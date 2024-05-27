@@ -390,3 +390,18 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
         challengeGracePeriodBlocks = config.challengeGracePeriodBlocks;
 
 ```
+
+
+## 13. Introduce a function to change stake amounts or stake token in EdgeChallengerManager or should use pricing method instead.
+
+Links to affected code *
+
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L276
+
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/challengeV2/EdgeChallengeManager.sol#L279
+
+### Impact
+
+Stake amount is current denoted as a definite amount of the stake token in use (not in terms of usd or oracle pricing). This cost of creating edges fluctuates depending the current value of the stake token. Depending on the direction of the staketoken price, creating assertions and edges can either be too expensive (even for pools), potentially allowing incorrect assertions to slip through, or can be extremely cheap, allowing excessive edge and assertion creation leading to spam.
+
+Consider using a stake token price instead, or introducing a function to change the stake amount.
