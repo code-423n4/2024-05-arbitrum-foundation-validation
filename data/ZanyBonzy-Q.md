@@ -405,3 +405,22 @@ https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f0
 Stake amount is current denoted as a definite amount of the stake token in use (not in terms of usd or oracle pricing). This cost of creating edges fluctuates depending the current value of the stake token. Depending on the direction of the staketoken price, creating assertions and edges can either be too expensive (even for pools), potentially allowing incorrect assertions to slip through, or can be extremely cheap, allowing excessive edge and assertion creation leading to spam.
 
 Consider using a stake token price instead, or introducing a function to change the stake amount.
+
+***
+
+## 14. `getPool` might be  vulnerable to address collisions
+
+Links to affected code *
+
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/AssertionStakingPoolCreator.sol#L30
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/EdgeStakingPoolCreator.sol#L30
+https://github.com/code-423n4/2024-05-arbitrum-foundation/blob/6f861c85b281a29f04daacfe17a2099d7dad5f8f/src/assertionStakingPool/StakingPoolCreatorUtils.sol#L15
+
+### Impact
+
+The `CREATE2`'s `computeAddress` function employs deterministic address computation to verify the authenticity of the deployed assertion and edge staking pools. This approach is based on the assumption that the address derived from the contract's creation bytecode and the creator's address is unique. However, this method is susceptible to address collision risks, where a different contract, under specific circumstances, might share the same computed address, leading to erroneous validation and possible draining of the pool's funds.
+
+```solidity
+        bytes32 bytecodeHash = keccak256(abi.encodePacked(creationCode, args));
+        address pool = Create2.computeAddress(0, bytecodeHash, address(this));
+```
