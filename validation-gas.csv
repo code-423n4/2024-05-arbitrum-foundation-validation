@@ -1,0 +1,8 @@
+status,issue,title,validator comment 1,validator comment 2,validator comment 3,root cause 1,root cause 2,root cause 3,merged root cause,primary finding,proposed root cause group
+Unsatisfactory,=HYPERLINK("-validation/issues/170";"validation-170"),OOS,Unsatisfactory,Unsatisfactory,Unsatisfactory,"","","","",,
+Unsatisfactory,=HYPERLINK("-validation/issues/158";"validation-158"),OOS,Unsatisfactory,Unsatisfactory,Unsatisfactory,"","","","",,
+Unsatisfactory,=HYPERLINK("-validation/issues/118";"validation-118"),OOS,Unsatisfactory,Unsatisfactory,Unsatisfactory,"","","","",,
+Unsatisfactory,=HYPERLINK("-validation/issues/84";"validation-84"),OOS,Unsatisfactory,Unsatisfactory,Unsatisfactory,"","","","",,
+Unsatisfactory,=HYPERLINK("-validation/issues/19";"validation-19"),OOS,Unsatisfactory,Unsatisfactory,Unsatisfactory,"","","","",,
+Unsatisfactory,=HYPERLINK("-validation/issues/16";"validation-16"),OOS,Unsatisfactory,Unsatisfactory,Unsatisfactory,"","","","",,
+Unsatisfactory,=HYPERLINK("-validation/issues/3";"validation-3"),OOS,Unsatisfactory,Unsatisfactory,Unsatisfactory,"","","","",,
