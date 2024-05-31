@@ -4,5 +4,7 @@
   "risk": "Q",
   "title": "QA Report",
   "issueId": 363,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/363"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/363",
+  "validatedIssueId": 59,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/59"
 }
