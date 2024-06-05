@@ -4,5 +4,7 @@
   "risk": "2",
   "title": "If an edge or assertion gets slashed, some depositors to the stakingPool will be cheated.",
   "issueId": 290,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/290"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/290",
+  "validatedIssueId": 29,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/29"
 }

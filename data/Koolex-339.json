@@ -4,5 +4,7 @@
   "risk": "2",
   "title": "An error in the accounting of stake refunds could result in insolvency",
   "issueId": 339,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/339"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/339",
+  "validatedIssueId": 20,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/20"
 }

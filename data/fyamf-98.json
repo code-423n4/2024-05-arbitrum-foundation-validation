@@ -4,5 +4,7 @@
   "risk": "3",
   "title": "Preventing stakers from withdrawing after the rollup update",
   "issueId": 98,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/98"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/98",
+  "validatedIssueId": 51,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/51"
 }

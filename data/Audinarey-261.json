@@ -4,5 +4,7 @@
   "risk": "2",
   "title": "`newStakeOnNewAssertion(...)` will revert due wrong logic implementation in `RollupUserLogic` contract",
   "issueId": 261,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/261"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/261",
+  "validatedIssueId": 36,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/36"
 }
