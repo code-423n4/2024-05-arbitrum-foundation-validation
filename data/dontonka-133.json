@@ -4,5 +4,7 @@
   "risk": "3",
   "title": "Upgrades to EdgeChallengeManager using setChallengeManager can allow to confirm bad assertion",
   "issueId": 133,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/133"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/133",
+  "validatedIssueId": 48,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/48"
 }

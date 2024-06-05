@@ -4,5 +4,7 @@
   "risk": "2",
   "title": "`removeWhitelistAfterFork` and  `removeWhitelistAfterValidatorAfk` can be called when contract is paused, disabling whitelist mechanism",
   "issueId": 343,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/343"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/343",
+  "validatedIssueId": 18,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/18"
 }

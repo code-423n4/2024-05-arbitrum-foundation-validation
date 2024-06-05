@@ -4,5 +4,7 @@
   "risk": "3",
   "title": "Buffer Depletion Vulnerability in DelayBuffer Library",
   "issueId": 4,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/4"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/4",
+  "validatedIssueId": 56,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/56"
 }

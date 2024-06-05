@@ -4,5 +4,7 @@
   "risk": "3",
   "title": " A malicious validator can avoid loss his money doing bad assertions",
   "issueId": 235,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/235"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/235",
+  "validatedIssueId": 38,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/38"
 }

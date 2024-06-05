@@ -4,5 +4,7 @@
   "risk": "2",
   "title": "Participants who didn't deposit into edge challenge manager can still get a refund",
   "issueId": 340,
-  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/340"
+  "issueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-validation/issues/340",
+  "validatedIssueId": 19,
+  "validatedIssueUrl": "https://github.com/code-423n4/2024-05-arbitrum-foundation-findings/issues/19"
 }
